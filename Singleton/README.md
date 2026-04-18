@@ -120,12 +120,3 @@ This implementation prioritizes:
 - Compatibility with scalable architectures
 
 ---
-
-## 🔮 Future Improvements (Optional)
-
-- Interface-based access (`IGameManager`)
-- Dependency Injection integration
-- Scene-scoped vs global services
-- Auto-bootstrap system
-
----
