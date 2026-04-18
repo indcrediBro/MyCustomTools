@@ -129,7 +129,3 @@ This implementation prioritizes:
 - Auto-bootstrap system
 
 ---
-
-## 📄 License
-
-Free to use in personal and commercial Unity projects.
