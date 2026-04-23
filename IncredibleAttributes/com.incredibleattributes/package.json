@@ -1,0 +1,12 @@
+{
+  "name": "com.incredibleattributes",
+  "displayName": "IncredibleAttributes",
+  "version": "1.0.0",
+  "unity": "6000.0",
+  "description": "A powerful, zero-inheritance inspector attribute library for Unity 6+. Drop-in replacement and spiritual successor to NaughtyAttributes — cleaner API, better performance, more features, and works on every MonoBehaviour and ScriptableObject without any editor class inheritance.",
+  "keywords": ["inspector", "attributes", "editor", "tools"],
+  "author": {
+    "name": "IncredibleAttributes"
+  },
+  "dependencies": {}
+}
