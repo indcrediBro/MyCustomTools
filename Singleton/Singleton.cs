@@ -1,102 +1,46 @@
 using UnityEngine;
 
+[DefaultExecutionOrder(-10)]
 public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
+    [Header("Singleton Settings")]
+    [SerializeField] private bool m_dontDestroyOnLoad;
+
     private static T _instance;
-    private static bool _isQuitting;
-    private static bool _initialized;
-
-    public static bool HasInstance => _instance != null;
-
     public static T Instance
     {
         get
         {
-            if (_isQuitting)
-                return null;
-
-            if (_instance == null && !_initialized)
-            {
-                Initialize();
-            }
-
+            if (_instance == null)
+                Debug.LogWarning($"[Singleton] {typeof(T)} instance is null.");
             return _instance;
         }
+        private set => _instance = value;
     }
 
-    /// <summary>
-    /// Explicit initialization (optional but recommended for control)
-    /// </summary>
-    public static void Initialize()
+    protected virtual void Awake()
     {
-        if (_initialized) return;
-
-        _initialized = true;
-
-        _instance = FindFirstObjectByType<T>(FindObjectsInactive.Include);
-
         if (_instance == null)
         {
-            var go = new GameObject($"[Singleton] {typeof(T).Name}");
-            _instance = go.AddComponent<T>();
+            _instance = this as T;
         }
-
-        if (_instance is Singleton<T> singleton)
+        else if (_instance != this)
         {
-            singleton.InternalInit();
-        }
-    }
-
-    private void InternalInit()
-    {
-        if (_instance != null && _instance != this)
-        {
+            Debug.LogWarning($"[Singleton] Duplicate {typeof(T)} on '{gameObject.name}'. Destroying.");
             Destroy(gameObject);
             return;
         }
 
-        _instance = this as T;
-
-        if (PersistAcrossScenes)
+        if (m_dontDestroyOnLoad)
+        {
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
-
-        OnInitialized();
-    }
-
-    /// <summary>
-    /// Override this instead of Awake
-    /// </summary>
-    protected virtual void OnInitialized() { }
-
-    /// <summary>
-    /// Override if you DON'T want persistence
-    /// </summary>
-    protected virtual bool PersistAcrossScenes => true;
-
-    protected virtual void Awake()
-    {
-        if (!_initialized)
-        {
-            _initialized = true;
-            InternalInit();
-        }
-        else if (_instance != this)
-        {
-            Destroy(gameObject);
         }
     }
 
     protected virtual void OnDestroy()
     {
         if (_instance == this)
-        {
             _instance = null;
-            _initialized = false;
-        }
-    }
-
-    protected virtual void OnApplicationQuit()
-    {
-        _isQuitting = true;
     }
 }
